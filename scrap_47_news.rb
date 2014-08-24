@@ -4,8 +4,8 @@ require "nokogiri"
 require "open-uri"
 
 Plugin.create(:scrap_47_news) do
-    ELEMENT_TITLE = '#bt_title'
-    ELEMENTS_BODY = ['span#bt_body p']
+    @ELEMENT_TITLE = '#bt_title'
+    @ELEMENTS_BODY = ['span#bt_body p']
 
     filter_rebuild_message do |message|
         dummy_message = message
@@ -37,9 +37,9 @@ Plugin.create(:scrap_47_news) do
         url = URI.extract(message.to_s)[0]
         doc = Nokogiri::HTML(open(url))
 
-        text = "■ #{doc.css(ELEMENT_TITLE)[0].text}\n"
+        text = "■ #{doc.css(@ELEMENT_TITLE)[0].text}\n"
 
-        for message_selector in ELEMENTS_BODY do
+        for message_selector in @ELEMENTS_BODY do
             elements = doc.css(message_selector)
 
             # 取得した要素に応じてテキスト変換
