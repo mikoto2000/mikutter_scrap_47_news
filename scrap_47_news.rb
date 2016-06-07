@@ -2,10 +2,11 @@
 
 require "nokogiri"
 require "open-uri"
+require 'open_uri_redirections'
 
 Plugin.create(:scrap_47_news) do
-    @ELEMENT_TITLE = '#bt_title'
-    @ELEMENTS_BODY = ['span#bt_body p']
+    @ELEMENT_TITLE = 'h1.main__title'
+    @ELEMENTS_BODY = ['.main__article>article>p']
 
     filter_rebuild_message do |message|
         dummy_message = message
@@ -35,7 +36,7 @@ Plugin.create(:scrap_47_news) do
     # メッセージ詰め込み
     def get_contents(message)
         url = URI.extract(message.to_s)[0]
-        doc = Nokogiri::HTML(open(url))
+        doc = Nokogiri::HTML(open(url, :allow_redirections => :all))
 
         text = "■ #{doc.css(@ELEMENT_TITLE)[0].text}\n"
 
